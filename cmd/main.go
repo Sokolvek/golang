@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"playground/routes"
+	"playground/internal/routes"
 	"playground/storage"
 )
 
 // @title           Swagger Example API
 // @version         1.0
 // @description     This is a sample server celler server.
-// @host      localhost:3000
+// @host      localhost:8080
 // @BasePath  /
 func main() {
 	storage.InitDB()
@@ -19,5 +18,4 @@ func main() {
 		fmt.Printf("error caused by migrations %e", err)
 	}
 	routes.Init()
-	http.ListenAndServe(":3000", routes.Mux)
 }

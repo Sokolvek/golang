@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
-	"io"
 	"net/http"
-	"playground/models"
+	"playground/internal/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Summary CreateUser
@@ -14,29 +14,27 @@ import (
 // @Product json
 // @Success 200 {string} string ok
 // @Router /users [post]
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	body, _ := io.ReadAll(r.Body)
-	defer r.Body.Close()
-
+func CreateUser(ctx *gin.Context) {
 	var user models.User
-	json.Unmarshal(body, &user)
+	ctx.BindJSON(&user)
+
 	user.Create(&user)
-	w.Write([]byte("ok"))
+	ctx.JSON(http.StatusCreated, user)
 }
 
 func FindUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func FindAllUsers(w http.ResponseWriter, r *http.Request) {
+func FindAllUsers(ctx *gin.Context) {
 	var user models.User
 
 	users, err := user.FindAll()
 	if err != nil {
-		w.WriteHeader(500)
+		ctx.AbortWithStatus(500)
 		return
 	}
-	res, _ := json.Marshal(users)
-	w.Write([]byte(res))
+
+	ctx.JSON(http.StatusOK, users)
 
 }
