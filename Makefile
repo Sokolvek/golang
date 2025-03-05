@@ -1,4 +1,4 @@
 start:
-	go run cmd/main.go postgres://postgres:3344@localhost:5432/go
+	go run cmd/main.go
 build:
 	go build -o test cmd/main.go

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"playground/internal/routes"
 	"playground/storage"
 )
@@ -13,9 +12,5 @@ import (
 // @BasePath  /
 func main() {
 	storage.InitDB()
-	err := storage.Migrate()
-	if err != nil {
-		fmt.Printf("error caused by migrations %e", err)
-	}
 	routes.Init()
 }

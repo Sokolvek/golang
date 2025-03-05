@@ -1,13 +1,16 @@
-FROM golang:alpine
+FROM golang:apline as builder
 
 WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY . .
+ENV GOCACHE=/go/.cache
+RUN go build -o cmd/main.go
 
-RUN go build -o main cmd/main.go
+FROM ubuntu:22.04
+RUN mkdir /app
+WORKDIR /app
 
-EXPOSE 8080
-
-# Передаем строку подключения к базе данных как аргумент
-CMD ["/app/main", "postgres://postgres:3344@localhost:5432/go"]
-
+COPY --from=builder /app/app .
+ENTRYPOINT ["./app"]

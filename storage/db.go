@@ -2,20 +2,23 @@ package storage
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
-	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 var Db *pgx.Conn
 
 func InitDB() {
-	// link example postgres://user:pass@localhost:5432/dbName
-	conn, err := pgx.Connect(context.Background(), os.Args[1])
+	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("error with connecting to db", os.Args[1])
+		log.Fatal("Error loading .env file")
+	}
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_STR"))
+	if err != nil {
+		log.Fatal("error with connecting to db", err)
 		os.Exit(1)
 	}
 	Db = conn
@@ -23,48 +26,4 @@ func InitDB() {
 
 func GetDB() *pgx.Conn {
 	return Db
-}
-
-func Migrate() error {
-
-	text, err := getFileText()
-	if err != nil {
-		return err
-	}
-
-	sqlQueries := getSqlQueries(&text)
-	for _, query := range sqlQueries {
-		rows, err := Db.Query(context.Background(), query)
-		if err != nil {
-			return err
-		}
-		rows.Close()
-	}
-
-	return nil
-}
-
-func getSqlQueries(text *string) []string {
-	sqlQueries := []string{}
-	temp := []string{}
-	for _, letter := range *text {
-		if string(letter) != ";" {
-			temp = append(temp, string(letter))
-		} else {
-			temp = append(temp, ";")
-			sqlQueries = append(sqlQueries, strings.Join(temp, ""))
-			temp = []string{}
-		}
-	}
-
-	return sqlQueries
-}
-
-func getFileText() (string, error) {
-	bytes, err := os.ReadFile("db.sql")
-	if err != nil {
-		return "", err
-	}
-	text := string(bytes)
-	return text, nil
 }

@@ -22,10 +22,12 @@ func CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, user)
 }
 
-func FindUsers(w http.ResponseWriter, r *http.Request) {
-
-}
-
+// @Summary GetUsers
+// @Tag user
+// @ID find-users
+// @Product json
+// @Success 200 {string} string ok
+// @Router /users [get]
 func FindAllUsers(ctx *gin.Context) {
 	var user models.User
 

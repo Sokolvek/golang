@@ -1,3 +1,5 @@
+-- +goose Up
+-- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS users(
     id SERIAL PRIMARY KEY,
     email VARCHAR(50),
@@ -9,5 +11,10 @@ CREATE TABLE IF NOT EXISTS posts(
     title VARCHAR(100),
     content TEXT
 );
+-- +goose StatementEnd
 
-INSERT INTO users (id, email, password) VALUES (1, 'test@gmail.com', '621');
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE users CASCADE;
+DROP TABLE posts;
+-- +goose StatementEnd

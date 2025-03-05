@@ -1,15 +1,20 @@
 basePath: /
-host: localhost:3000
+host: localhost:8080
 info:
   contact: {}
   description: This is a sample server celler server.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Swagger Example API
   version: "1.0"
 paths:
   /users:
+    get:
+      operationId: find-users
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: GetUsers
     post:
       consumes:
       - application/json
